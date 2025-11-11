@@ -7,9 +7,17 @@
   },
   "author": "onlymisaky@gmail.com",
   "license": "ISC",
-  "description": "",
+  "description": "同步您的设备上所有以 Visual Studio Code 为内核的编辑器配置",
   "dependencies": {
     "fs-extra": "^11.3.2",
     "inquirer": "^12.11.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onlymisaky/sync-code-editor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/onlymisaky/sync-code-editor/issues"
+  },
+  "homepage": "https://github.com/onlymisaky/sync-code-editor"
 }
