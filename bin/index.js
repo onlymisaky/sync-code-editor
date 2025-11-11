@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const { selectSourceEditor, selectSyncItems, confirmSync } = require('../lib/prompts');
+const { selectSourceEditor, selectConfigurationList, selectTargetEditors, confirmSync } = require('../lib/prompts');
 const { syncConfigs, printSyncResults } = require('../lib/sync');
-const { detectInstalledEditors, editorConfigs } = require('../lib/editors');
+const { detectInstalledEditors, getEditorInfo } = require('../lib/editors');
 
 /**
  * 主函数
@@ -24,19 +24,27 @@ async function main() {
     // 显示检测结果
     console.log(`\n✓ 检测到 ${installedEditors.length} 个已安装的编辑器：`);
     installedEditors.forEach(editor => {
-      console.log(`  - ${editor.displayName}`);
+      console.log(`  - ${editor.name}`);
     });
     console.log('');
 
     // 选择源编辑器
-    const sourceEditor = await selectSourceEditor(installedEditors);
-    console.log(`\n已选择源编辑器: ${editorConfigs[sourceEditor].displayName}\n`);
+    const sourceEditorKey = await selectSourceEditor(installedEditors);
+    console.log(`\n已选择源编辑器: ${getEditorInfo(sourceEditorKey, 'name')}\n`);
 
     // 选择要同步的配置项
-    const syncItems = await selectSyncItems();
-    console.log(`\n已选择 ${syncItems.length} 个配置项进行同步\n`);
+    const configurationKeys = await selectConfigurationList();
+    console.log(`\n已选择 ${configurationKeys.length} 个配置项进行同步\n`);
 
-    const confirm = await confirmSync(editorConfigs[sourceEditor].displayName)
+    const targetEditorKeys = await selectTargetEditors(installedEditors, sourceEditorKey);
+    const targetEditorNames = targetEditorKeys.map(key => getEditorInfo(key, 'name')).join(', ');
+    console.log(`\n已选择目标编辑器: ${targetEditorNames}\n`);
+
+    const confirm = await confirmSync(
+      sourceEditorKey,
+      configurationKeys,
+      targetEditorKeys
+    );
 
     if (!confirm) {
       console.log('已取消同步操作。');
@@ -45,18 +53,10 @@ async function main() {
 
     // 执行同步
     console.log('开始同步配置...\n');
-    const result = await syncConfigs(sourceEditor, syncItems, installedEditors);
+    const result = await syncConfigs(sourceEditorKey, configurationKeys, installedEditors, targetEditorKeys);
 
     // 打印结果
     printSyncResults(result);
-
-    if (result.success) {
-      console.log('✓ 同步完成！');
-      process.exit(0);
-    } else {
-      console.log('✗ 同步过程中出现错误，请检查上述输出。');
-      process.exit(1);
-    }
   } catch (error) {
     console.error('\n✗ 发生错误:', error.message);
     if (error.stack) {
