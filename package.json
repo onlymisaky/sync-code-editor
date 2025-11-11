@@ -1,0 +1,15 @@
+{
+  "name": "sync-code-editor",
+  "version": "1.0.0",
+  "main": "index.js",
+  "bin": {
+    "sync-code-editor": "./bin/index.js"
+  },
+  "author": "onlymisaky@gmail.com",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "fs-extra": "^11.3.2",
+    "inquirer": "^12.11.0"
+  }
+}
