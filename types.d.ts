@@ -8,6 +8,9 @@ export interface Editor {
 
   /** 编辑器文件路径 */
   path: string;
+
+  /** 编辑器首页 URL */
+  homepage: string;
 }
 
 export type EditorMap = Record<EditorKeys, Omit<Editor, 'key'>>;
