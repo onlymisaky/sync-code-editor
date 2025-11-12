@@ -1,0 +1,28 @@
+name: Publish NPM Package
+
+permissions:
+  id-token: write
+  contents: write
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  publish:
+    # if: "${{ startsWith(github.event.head_commit.message, 'chore: release v') }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci
+      - run: npm publish -r --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true

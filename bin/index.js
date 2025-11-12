@@ -7,9 +7,6 @@ const { syncConfigs, printSyncResults } = require('../lib/sync');
 const { detectInstalledEditors, getEditorList } = require('../lib/editors');
 const { renderLink } = require('../lib/utils');
 
-/**
- * 主函数
- */
 async function main() {
   try {
     console.log(chalk.blue('★★ 欢迎使用编辑器配置同步工具 ★★\n'));
@@ -72,5 +69,4 @@ async function main() {
   }
 }
 
-// 运行主函数
 main();
