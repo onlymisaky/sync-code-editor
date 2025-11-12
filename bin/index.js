@@ -28,6 +28,11 @@ async function main() {
       process.exit(1);
     }
 
+    if (installedEditors.length === 1) {
+      console.log(chalk.yellow(`✗ 您只安装了 ${installedEditors[0].name} ，不需要进行同步操作。`));
+      process.exit(1);
+    }
+
     // 选择源编辑器
     const sourceEditorKey = await selectSourceEditor(installedEditors);
 
@@ -35,7 +40,9 @@ async function main() {
     const configurationKeys = await selectConfigurationList();
 
     // 选择目标编辑器
-    const targetEditorKeys = await selectTargetEditors(installedEditors, sourceEditorKey);
+    const targetEditorKeys = installedEditors.length === 2
+      ? installedEditors.filter(editor => editor.key !== sourceEditorKey).map(editor => editor.key)
+      : await selectTargetEditors(installedEditors, sourceEditorKey);
 
     // 确认同步操作
     const confirm = await confirmSync(
