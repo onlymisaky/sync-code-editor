@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 
-const chalk = require('chalk').default
-const ora = require('ora').default
+const chalk = require('chalk').default;
+const ora = require('ora').default;
+const process = require('node:process');
+const { detectInstalledEditors, getEditorList } = require('../lib/editors');
 const { selectSourceEditor, selectConfigurationList, selectTargetEditors, confirmSync } = require('../lib/prompts');
 const { syncConfigs, printSyncResults } = require('../lib/sync');
-const { detectInstalledEditors, getEditorList } = require('../lib/editors');
-const { renderLink } = require('../lib/utils');
+const { renderLink, printf } = require('../lib/utils');
 
 async function main() {
   try {
-    console.log(chalk.blue('★★ 欢迎使用编辑器配置同步工具 ★★\n'));
+    printf(chalk.blue('★★ 欢迎使用编辑器配置同步工具 ★★\n'));
 
     // 检测已安装的编辑器
     let spinner = ora('正在检测已安装的编辑器...').start();
@@ -17,16 +18,16 @@ async function main() {
     spinner.stop();
 
     if (installedEditors.length === 0) {
-      console.log(chalk.red('✗ 未检测到任何已安装的编辑器。'));
-      console.log('请确保至少已安装以下编辑器中的任意两个：');
-      getEditorList().forEach(editor => {
-        console.log('  - ' + renderLink(editor.homepage, editor.name));
+      printf(chalk.red('✗ 未检测到任何已安装的编辑器。'));
+      printf('请确保至少已安装以下编辑器中的任意两个：');
+      getEditorList().forEach((editor) => {
+        printf(`  - ${renderLink(editor.homepage, editor.name)}`);
       });
       process.exit(1);
     }
 
     if (installedEditors.length === 1) {
-      console.log(chalk.yellow(`✗ 您只安装了 ${installedEditors[0].name} ，不需要进行同步操作。`));
+      printf(chalk.yellow(`✗ 您只安装了 ${installedEditors[0].name} ，不需要进行同步操作。`));
       process.exit(1);
     }
 
@@ -45,11 +46,11 @@ async function main() {
     const confirm = await confirmSync(
       sourceEditorKey,
       configurationKeys,
-      targetEditorKeys
+      targetEditorKeys,
     );
 
     if (!confirm) {
-      console.log(chalk.yellow('已取消同步操作。'));
+      printf(chalk.yellow('已取消同步操作。'));
       process.exit(0);
     }
 
@@ -60,10 +61,11 @@ async function main() {
 
     // 打印结果
     printSyncResults(result);
-  } catch (error) {
-    console.log(chalk.red('\n✗ 发生错误:'), error.message);
+  }
+  catch (error) {
+    printf(chalk.red('\n✗ 发生错误:'), error.message);
     if (error.stack) {
-      console.log(chalk.red('\n错误堆栈:'), error.stack);
+      printf(chalk.red('\n错误堆栈:'), error.stack);
     }
     process.exit(1);
   }
