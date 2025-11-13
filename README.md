@@ -22,7 +22,7 @@
 - 编辑器设置 (`settings.json`)
 - 快捷键绑定 (`keybindings.json`)
 - 代码片段 (`snippets/*`)
-- 项目管理器配置 (`alefragnani.project-manager/projects.json`)
+- [ ] 插件 (`~/[编辑器路径]/extensions/*`)
 
 ## 📦 安装
 

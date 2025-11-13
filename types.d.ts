@@ -15,7 +15,7 @@ export interface Editor {
 
 export type EditorMap = Record<EditorKeys, Omit<Editor, 'key'>>;
 
-export type ConfigurationKeys = 'settings' | 'keybindings' | 'snippets' | 'project-manager';
+export type ConfigurationKeys = 'settings' | 'keybindings' | 'snippets';
 
 export interface Configuration {
   key: ConfigurationKeys;
